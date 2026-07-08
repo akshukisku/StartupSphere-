@@ -30,15 +30,15 @@ export const startupColumns: TableColumn<AdminStartup>[] = [
         : "-",
   },
 
-  {
-    header: "Status",
-    key: "status",
-    render: (row) => (
-      <Badge variant="secondary">
-        {row.status}
-      </Badge>
-    ),
-  },
+ {
+  header: "Status",
+  key: "status",
+  render: (row) => (
+    <Badge variant="secondary">
+      {row.status.toString()}
+    </Badge>
+  ),
+},
 
   {
     header: "Actions",

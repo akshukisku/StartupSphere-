@@ -1,4 +1,10 @@
 import { supabase } from "@/lib/supabase.config";
+import {
+  buildDashboardStats,
+  buildMonthlyGrowth,
+  buildRoleDistribution,
+  buildStartupStatus,
+} from "@/service/helper/adminDashboard.helper";
 import { StartupStatus } from "@/types/enum/enum";
 
 export const fetchPendingUsersFns = async () => {
@@ -30,9 +36,7 @@ export const fetchPendingUsersFns = async () => {
     };
   }
 };
-export const approveUserFns = async (
-  userId: string
-) => {
+export const approveUserFns = async (userId: string) => {
   try {
     const { error } = await supabase
       .from("profiles")
@@ -53,15 +57,12 @@ export const approveUserFns = async (
 
     return {
       success: false,
-      message:
-        err.message || "Failed to approve user",
+      message: err.message || "Failed to approve user",
     };
   }
 };
 
-export const rejectUserFns = async (
-  userId: string
-) => {
+export const rejectUserFns = async (userId: string) => {
   try {
     const { error } = await supabase
       .from("profiles")
@@ -81,79 +82,91 @@ export const rejectUserFns = async (
 
     return {
       success: false,
-      message:
-        err.message || "Failed to reject user",
+      message: err.message || "Failed to reject user",
     };
   }
 };
 export const fetchAdminStatsFns = async () => {
   try {
-    const [{ data: users, error: userError }, { data: startups, error: startupError }] =
-      await Promise.all([
-        supabase.from("profiles").select("role, approval_status"),
-        supabase.from("startups").select("approval_status"),
-      ]);
+    const [
+      { data: users, error: userError },
+      { data: startups, error: startupError },
+      { data: mentorAssignments, error: mentorAssignmentError },
+    ] = await Promise.all([
+      supabase.from("profiles").select("role, approval_status"),
+
+      supabase.from("startups").select("status"),
+
+      supabase.from("mentor_assignments").select("status"),
+    ]);
 
     if (userError) throw userError;
     if (startupError) throw startupError;
+    if (mentorAssignmentError) throw mentorAssignmentError;
 
     const stats = {
       // ==========================
       // Users
       // ==========================
-      pendingUsers: users.filter(
-        (user) => user.approval_status === "pending"
-      ).length,
+      totalUsers: users?.length ?? 0,
 
-      approvedUsers: users.filter(
-        (user) => user.approval_status === "approved"
-      ).length,
+      pendingUsers:
+        users?.filter((user) => user.approval_status === "pending").length ?? 0,
 
-      rejectedUsers: users.filter(
-        (user) => user.approval_status === "rejected"
-      ).length,
+      approvedUsers:
+        users?.filter((user) => user.approval_status === "approved").length ??
+        0,
 
-      founders: users.filter(
-        (user) => user.role === "founder"
-      ).length,
+      rejectedUsers:
+        users?.filter((user) => user.approval_status === "rejected").length ??
+        0,
 
-      investors: users.filter(
-        (user) => user.role === "investor"
-      ).length,
+      founders: users?.filter((user) => user.role === "founder").length ?? 0,
 
-      mentors: users.filter(
-        (user) => user.role === "mentor"
-      ).length,
+      investors: users?.filter((user) => user.role === "investor").length ?? 0,
+
+      mentors: users?.filter((user) => user.role === "mentor").length ?? 0,
 
       // ==========================
       // Startups
       // ==========================
-      pendingStartups: startups.filter(
-        (startup) => startup.approval_status === "pending"
-      ).length,
+      totalStartups: startups?.length ?? 0,
 
-      approvedStartups: startups.filter(
-        (startup) => startup.approval_status === "approved"
-      ).length,
+      pendingStartups:
+        startups?.filter((startup) => startup.status === "pending").length ?? 0,
 
-      rejectedStartups: startups.filter(
-        (startup) => startup.approval_status === "rejected"
-      ).length,
+      approvedStartups:
+        startups?.filter((startup) => startup.status === "approved").length ??
+        0,
+
+      rejectedStartups:
+        startups?.filter((startup) => startup.status === "rejected").length ??
+        0,
+
+      // ==========================
+      // Mentorships
+      // ==========================
+      activeMentorships:
+        mentorAssignments?.filter(
+          (assignment) => assignment.status === "assigned",
+        ).length ?? 0,
+
+      completedMentorships:
+        mentorAssignments?.filter(
+          (assignment) => assignment.status === "completed",
+        ).length ?? 0,
     };
 
     return {
       success: true,
       data: stats,
-      message: "Dashboard stats fetched successfully",
+      message: "Dashboard statistics fetched successfully.",
     };
   } catch (error) {
-    const err = error as Error;
-
     return {
       success: false,
       data: null,
-      message:
-        err.message ?? "Failed to fetch dashboard stats",
+      message: error instanceof Error ? error.message : "Something went wrong.",
     };
   }
 };
@@ -162,7 +175,8 @@ export const fetchPendingStartupsFns = async () => {
   try {
     const { data, error } = await supabase
       .from("startups")
-      .select(`
+      .select(
+        `
         id,
         startup_name,
         logo_url,
@@ -174,7 +188,8 @@ export const fetchPendingStartupsFns = async () => {
           full_name,
           email
         )
-      `)
+      `,
+      )
       .eq("status", StartupStatus.PENDING)
       .order("submitted_at", {
         ascending: false,
@@ -192,7 +207,7 @@ export const fetchPendingStartupsFns = async () => {
       data?.map((startup) => ({
         ...startup,
         founder: Array.isArray(startup.founder)
-          ? startup.founder[0] ?? null
+          ? (startup.founder[0] ?? null)
           : startup.founder,
       })) ?? [];
 
@@ -215,11 +230,13 @@ export const fetchStartupByIdFns = async (startupId: string) => {
   try {
     const { data, error } = await supabase
       .from("startups")
-      .select(`
+      .select(
+        `
         *,
         startup_team(*),
         startup_media(*)
-      `)
+      `,
+      )
       .eq("id", startupId)
       .single();
 
@@ -247,10 +264,7 @@ export const fetchStartupByIdFns = async (startupId: string) => {
   }
 };
 
-export const approveStartupFns = async (
-  startupId: string,
-  adminId: string
-) => {
+export const approveStartupFns = async (startupId: string, adminId: string) => {
   try {
     const { error } = await supabase
       .from("startups")
@@ -286,7 +300,7 @@ export const approveStartupFns = async (
 export const rejectStartupFns = async (
   startupId: string,
   adminId: string,
-  reason: string
+  reason: string,
 ) => {
   try {
     const { error } = await supabase
@@ -316,6 +330,150 @@ export const rejectStartupFns = async (
     return {
       success: false,
       message: "Something went wrong.",
+    };
+  }
+};
+
+export const fetchAdminDashboardStatsFns = async () => {
+  try {
+    // Pending Startups
+    const { count: pendingStartups, error: startupError } = await supabase
+      .from("investor_startups")
+      .select("*", {
+        count: "exact",
+        head: true,
+      })
+      .eq("status", "pending");
+
+    if (startupError) throw startupError;
+
+    // Pending Mentors
+    const { count: pendingMentors, error: mentorError } = await supabase
+      .from("profiles")
+      .select("*", {
+        count: "exact",
+        head: true,
+      })
+      .eq("role", "mentor")
+      .eq("approval_status", "pending");
+
+    if (mentorError) throw mentorError;
+
+    // Pending Investors
+    const { count: pendingInvestors, error: investorError } = await supabase
+      .from("profiles")
+      .select("*", {
+        count: "exact",
+        head: true,
+      })
+      .eq("role", "investor")
+      .eq("approval_status", "pending");
+
+    if (investorError) throw investorError;
+
+    // Active Mentorships
+    const { count: activeMentorships, error: activeError } = await supabase
+      .from("mentor_assignments")
+      .select("*", {
+        count: "exact",
+        head: true,
+      })
+      .eq("status", "assigned");
+
+    if (activeError) throw activeError;
+
+    // Completed Mentorships
+    const { count: completedMentorships, error: completedError } =
+      await supabase
+        .from("mentor_assignments")
+        .select("*", {
+          count: "exact",
+          head: true,
+        })
+        .eq("status", "completed");
+
+    if (completedError) throw completedError;
+
+    // Total Users
+    const { count: totalUsers, error: userError } = await supabase
+      .from("profiles")
+      .select("*", {
+        count: "exact",
+        head: true,
+      });
+
+    if (userError) throw userError;
+
+    return {
+      success: true,
+      data: {
+        pendingStartups: pendingStartups ?? 0,
+        pendingMentors: pendingMentors ?? 0,
+        pendingInvestors: pendingInvestors ?? 0,
+        activeMentorships: activeMentorships ?? 0,
+        completedMentorships: completedMentorships ?? 0,
+        totalUsers: totalUsers ?? 0,
+      },
+      message: "Admin dashboard statistics fetched successfully.",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      data: null,
+      message: error instanceof Error ? error.message : "Something went wrong.",
+    };
+  }
+};
+export const fetchAdminDashboardFns = async () => {
+  try {
+    const [
+      { data: users, error: userError },
+      { data: startups, error: startupError },
+      { data: mentorAssignments, error: mentorAssignmentError },
+    ] = await Promise.all([
+      supabase
+        .from("profiles")
+        .select("role, approval_status, created_at")
+        .order("created_at", { ascending: true }),
+
+      supabase.from("startups").select("status"),
+
+      supabase.from("mentor_assignments").select("status"),
+    ]);
+
+    if (userError) throw userError;
+    if (startupError) throw startupError;
+    if (mentorAssignmentError) throw mentorAssignmentError;
+
+    return {
+      success: true,
+      data: {
+        stats: buildDashboardStats({
+          users: users ?? [],
+          startups: startups ?? [],
+          mentorAssignments: mentorAssignments ?? [],
+        }),
+
+        monthlyGrowth: buildMonthlyGrowth({
+          users: users ?? [],
+        }),
+        roleDistribution: buildRoleDistribution({
+          users: users ?? [],
+        }),
+        startupStatus: buildStartupStatus({
+  startups: startups ?? [],
+}),
+        mentorshipStatus: [],
+      },
+      message: "Dashboard fetched successfully.",
+    };
+  } catch (error) {
+    return {
+      success: false,
+
+      data: null,
+
+      message: error instanceof Error ? error.message : "Something went wrong.",
     };
   }
 };

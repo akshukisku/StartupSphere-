@@ -16,28 +16,46 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
 import { useAdminStore } from "@/store/useAdminStore";
+import { useRejectStartup, useStartupPreview } from "@/hooks/admin/useAdmin";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const AdminRejectDialog = () => {
-  const {
-    rejectDialogOpen,
-    selectedStartup,
-    closeRejectDialog,
-    rejectStartup,
-    isLoading,
-  } = useAdminStore();
+const {
+  rejectDialogOpen,
+  selectedStartupForRejectId,
+  closeRejectDialog,
+} = useAdminStore();
+const {
+  data: startup,
+  isPending,
+} = useStartupPreview(
+  selectedStartupForRejectId ?? undefined
+);
+
+const {
+  mutateAsync: rejectStartup,
+  isPending: isRejecting,
+} = useRejectStartup();
+
+const admin = useAuthStore(
+  (state) => state.profile
+);
 
   const [reason, setReason] = useState("");
 
-  const handleReject = async () => {
-    if (!selectedStartup || !reason.trim()) return;
+const handleReject = async () => {
+  if (!startup || !admin) return;
 
-    const success = await rejectStartup(selectedStartup.id, reason);
+  await rejectStartup({
+    startupId: startup.id,
+    adminId: admin.id,
+    reason,
+  });
 
-    if (!success) return;
+  setReason("");
 
-    setReason("");
-    closeRejectDialog();
-  };
+  closeRejectDialog();
+};
 
   return (
     <AlertDialog
@@ -75,7 +93,7 @@ const AdminRejectDialog = () => {
           <AlertDialogAction asChild>
             <Button
               variant="destructive"
-              disabled={!reason.trim() || isLoading}
+   disabled={!reason.trim() || isRejecting}
               onClick={handleReject}
             >
               Reject Startup
