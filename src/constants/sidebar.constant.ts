@@ -1,5 +1,5 @@
-import { BookmarkCheckIcon, SearchIcon } from "@animateicons/react/huge";
-import { UserCheckIcon } from "@animateicons/react/lucide";
+import { BookmarkCheckIcon, SearchIcon, Settings01Icon } from "@animateicons/react/huge";
+import { UserCheckIcon, UserIcon } from "@animateicons/react/lucide";
 import {
   LayoutDashboard,
   Rocket,
@@ -9,6 +9,8 @@ import {
   FileText,
   HeartHandshake,
   BriefcaseBusiness,
+  CalendarDays,
+  ClipboardCheck,
 } from "lucide-react";
 
 export const founderMenu = [
@@ -35,10 +37,21 @@ export const mentorMenu = [
     url: "/mentor/dashboard",
     icon: LayoutDashboard,
   },
+
   {
-    title: "Requests",
-    url: "/mentor/requests",
-    icon: Users,
+    title: "Assigned Startups",
+    url: "/mentor/startups",
+    icon: BriefcaseBusiness,
+  },
+  {
+    title: "Sessions",
+    url: "/mentor/sessions",
+    icon: CalendarDays,
+  },
+    {
+    title: "Profile",
+    url: "/mentor/profile",
+    icon: UserIcon,
   },
 ];
 

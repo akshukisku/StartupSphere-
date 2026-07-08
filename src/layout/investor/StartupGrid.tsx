@@ -1,36 +1,46 @@
 "use client";
 
-import { useInvestorStore } from "@/store/useInvestorStore";
 import StartupCard from "./StartupCard";
-import { useStartups } from "@/hooks/investor/useInvestor";
 import StartupPagination from "./StartupPagination";
+
 import StartupCardSkeleton from "@/components/skeleton/StartupCardSkeleton";
 
-const StartupGrid = () => {
-  const { page, limit, search, industry, fundingStage } = useInvestorStore();
+import { InvestorStartup } from "@/types/interface/investor.interface";
 
-  const { data, isPending, isError } = useStartups({
-    page,
-    limit,
-    search,
-    industry,
-    fundingStage,
-  });
+const SKELETON_COUNT = 9;
 
-if (isPending) {
-  return (
-    <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-      {Array.from({ length: 9 }).map((_, index) => (
-        <StartupCardSkeleton key={index} />
-      ))}
-    </div>
-  );
+interface StartupGridProps {
+  startups?: InvestorStartup[];
+  savedStartupIds?: Set<string>;
+  isLoading?: boolean;
+  isError?: boolean;
+  totalPages?: number;
+  showPagination?: boolean;
 }
+const StartupGrid = ({
+  startups = [],
+  savedStartupIds = new Set<string>(),
+  isLoading = false,
+  isError = false,
+  totalPages = 1,
+  showPagination = true,
+}: StartupGridProps) => {
+  if (isLoading) {
+    return (
+      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {Array.from({ length: SKELETON_COUNT }).map((_, index) => (
+          <StartupCardSkeleton key={index} />
+        ))}
+      </div>
+    );
+  }
 
   if (isError) {
     return (
       <div className="rounded-xl border border-destructive p-10 text-center">
-        <h3 className="text-lg font-semibold">Failed to load startups</h3>
+        <h3 className="text-lg font-semibold">
+          Failed to load startups
+        </h3>
 
         <p className="mt-2 text-sm text-muted-foreground">
           Please try again later.
@@ -39,13 +49,15 @@ if (isPending) {
     );
   }
 
-  if (!data || data.startups.length === 0) {
+  if (startups.length === 0) {
     return (
       <div className="rounded-xl border border-dashed p-10 text-center">
-        <h3 className="text-lg font-semibold">No Startups Found</h3>
+        <h3 className="text-lg font-semibold">
+          No Startups Found
+        </h3>
 
         <p className="mt-2 text-sm text-muted-foreground">
-          Check back later for newly approved startups.
+          No startups matched your filters.
         </p>
       </div>
     );
@@ -54,11 +66,18 @@ if (isPending) {
   return (
     <>
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {data.startups.map((startup) => (
-          <StartupCard key={startup.id} startup={startup} />
+        {startups.map((startup) => (
+          <StartupCard
+            key={startup.id}
+            startup={startup}
+            isSaved={savedStartupIds.has(startup.id)}
+          />
         ))}
       </div>
-      <StartupPagination totalPages={data.totalPages} />
+
+      {showPagination && (
+        <StartupPagination totalPages={totalPages} />
+      )}
     </>
   );
 };

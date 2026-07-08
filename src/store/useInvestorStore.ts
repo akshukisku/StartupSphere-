@@ -1,13 +1,31 @@
-import { InvestorState } from "@/types/interface/investor.interface";
 import { create } from "zustand";
 
+import { InvestorState } from "@/types/interface/investor.interface";
+
 export const useInvestorStore = create<InvestorState>((set) => ({
+  // -------------------------
+  // Filters
+  // -------------------------
   search: "",
   industry: "all",
   fundingStage: "all",
   page: 1,
   limit: 9,
 
+  // -------------------------
+  // Data
+  // -------------------------
+  startups: [],
+  savedStartupIds: new Set<string>(),
+
+  isLoading: false,
+  isError: false,
+
+  totalPages: 1,
+
+  // -------------------------
+  // Actions
+  // -------------------------
   setSearch: (search) =>
     set({
       search,

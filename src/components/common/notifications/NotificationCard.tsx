@@ -19,7 +19,11 @@ const NotificationCard = ({ notification, onClick }: NotificationCardProps) => {
         p-4
         text-left
         transition-all
-        hover:bg-accent
+        hover:-translate-y-0.5
+hover:bg-accent/60
+hover:shadow-lg
+transition-all
+duration-200
         ${
           notification.is_read
             ? "border-transparent"

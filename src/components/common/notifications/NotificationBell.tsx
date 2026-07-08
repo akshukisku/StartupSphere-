@@ -15,10 +15,14 @@ const NotificationBell = () => {
     const { toggle } =
   useNotificationStore();
 
-  const unreadCount = data.filter(
-    (notification) =>
-      !notification.is_read
-  ).length;
+  const unreadCount =
+  data?.reduce(
+    (count, notification) =>
+      notification.is_read
+        ? count
+        : count + 1,
+    0
+  ) ?? 0;
 
   return (
     <Button

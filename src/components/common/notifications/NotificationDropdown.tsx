@@ -20,64 +20,46 @@ const NotificationDropdown = () => {
   const { isOpen, close } = useNotificationStore();
 
   const { data = [], isLoading } = useNotifications();
+  const unreadCount = data.filter(
+    (notification) => !notification.is_read,
+  ).length;
 
-  const { mutate: markAllAsRead, isPending } =
-    useMarkAllNotificationsAsRead();
+  const { mutate: markAllAsRead, isPending } = useMarkAllNotificationsAsRead();
 
-  const { mutate: markAsRead } =
-    useMarkNotificationAsRead();
+  const { mutate: markAsRead } = useMarkNotificationAsRead();
 
-  const dropdownRef =
-    useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close when clicking outside
   useEffect(() => {
-    const handleClickOutside = (
-      event: MouseEvent
-    ) => {
+    const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(
-          event.target as Node
-        )
+        !dropdownRef.current.contains(event.target as Node)
       ) {
         close();
       }
     };
 
-    document.addEventListener(
-      "mousedown",
-      handleClickOutside
-    );
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener(
-        "mousedown",
-        handleClickOutside
-      );
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [close]);
 
   // Close on Escape
   useEffect(() => {
-    const handleEscape = (
-      event: KeyboardEvent
-    ) => {
+    const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         close();
       }
     };
 
-    document.addEventListener(
-      "keydown",
-      handleEscape
-    );
+    document.addEventListener("keydown", handleEscape);
 
     return () => {
-      document.removeEventListener(
-        "keydown",
-        handleEscape
-      );
+      document.removeEventListener("keydown", handleEscape);
     };
   }, [close]);
 
@@ -121,11 +103,17 @@ const NotificationDropdown = () => {
         >
           {/* Header */}
           <div className="border-b border-white/10 px-5 py-4">
-            <h3 className="text-lg font-semibold">
-              Notifications
-            </h3>
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Notifications</h3>
 
-            <p className="text-sm text-muted-foreground">
+              {unreadCount > 0 && (
+                <span className="rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
+                  {unreadCount} New
+                </span>
+              )}
+            </div>
+
+            <p className="mt-1 text-sm text-muted-foreground">
               Stay updated with your activity.
             </p>
           </div>
@@ -133,9 +121,14 @@ const NotificationDropdown = () => {
           {/* Body */}
           <div className="max-h-[450px] space-y-3 overflow-y-auto p-4">
             {isLoading ? (
-              <p className="text-center text-sm text-muted-foreground">
-                Loading...
-              </p>
+              <div className="space-y-3">
+                {[1, 2, 3].map((item) => (
+                  <div
+                    key={item}
+                    className="h-20 animate-pulse rounded-2xl bg-muted"
+                  />
+                ))}
+              </div>
             ) : data.length === 0 ? (
               <EmptyNotification />
             ) : (
@@ -157,20 +150,18 @@ const NotificationDropdown = () => {
           </div>
 
           {/* Footer */}
-          <div className="border-t border-white/10 p-4">
-            <Button
-              variant="outline"
-              className="w-full rounded-xl"
-              disabled={isPending}
-              onClick={() =>
-                markAllAsRead()
-              }
-            >
-              {isPending
-                ? "Updating..."
-                : "Mark all as read"}
-            </Button>
-          </div>
+          {data.length > 0 && (
+            <div className="border-t border-white/10 p-4">
+              <Button
+                variant="outline"
+                className="w-full rounded-xl"
+                disabled={isPending || unreadCount === 0}
+                onClick={() => markAllAsRead()}
+              >
+                {isPending ? "Updating..." : "Mark all as read"}
+              </Button>
+            </div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>

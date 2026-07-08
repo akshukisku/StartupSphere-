@@ -1,9 +1,7 @@
-import React from 'react'
+import MentorDashboard from "@/layout/mentor/MentorDashboard";
 
-const MentorDashboard = () => {
-  return (
-    <div>MentorDashboard</div>
-  )
-}
+const Page = () => {
+  return <MentorDashboard />;
+};
 
-export default MentorDashboard
+export default Page;
