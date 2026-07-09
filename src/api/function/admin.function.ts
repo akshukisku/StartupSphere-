@@ -5,7 +5,8 @@ import {
   buildRoleDistribution,
   buildStartupStatus,
 } from "@/service/helper/adminDashboard.helper";
-import { StartupStatus } from "@/types/enum/enum";
+import { NotificationType, StartupStatus } from "@/types/enum/enum";
+import { createNotification } from "@/api/function/notification.function";
 
 export const fetchPendingUsersFns = async () => {
   try {
@@ -266,6 +267,26 @@ export const fetchStartupByIdFns = async (startupId: string) => {
 
 export const approveStartupFns = async (startupId: string, adminId: string) => {
   try {
+    // Get founder information
+    const { data: startup, error: startupError } = await supabase
+      .from("startups")
+      .select(
+        `
+            founder_id,
+            startup_name
+          `,
+      )
+      .eq("id", startupId)
+      .single();
+
+    if (startupError || !startup) {
+      return {
+        success: false,
+        message: startupError?.message ?? "Startup not found.",
+      };
+    }
+
+    // Approve startup
     const { error } = await supabase
       .from("startups")
       .update({
@@ -281,6 +302,19 @@ export const approveStartupFns = async (startupId: string, adminId: string) => {
         success: false,
         message: error.message,
       };
+    }
+
+    // We'll insert notification here (next step)
+    const notification = await createNotification({
+      userId: startup.founder_id,
+      title: "Startup Approved 🎉",
+      description: `Congratulations! Your startup "${startup.startup_name}" has been approved by the admin.`,
+      type: NotificationType.STARTUP,
+      referenceId: startupId,
+    });
+
+    if (!notification.success) {
+      console.error("Failed to create notification:", notification.message);
     }
 
     return {
@@ -461,8 +495,8 @@ export const fetchAdminDashboardFns = async () => {
           users: users ?? [],
         }),
         startupStatus: buildStartupStatus({
-  startups: startups ?? [],
-}),
+          startups: startups ?? [],
+        }),
         mentorshipStatus: [],
       },
       message: "Dashboard fetched successfully.",
@@ -474,6 +508,161 @@ export const fetchAdminDashboardFns = async () => {
       data: null,
 
       message: error instanceof Error ? error.message : "Something went wrong.",
+    };
+  }
+};
+export const fetchInvestorsFns = async () => {
+  try {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select(
+        `
+        id,
+        full_name,
+        email,
+        avatar_path,
+        approval_status,
+        is_verified,
+        created_at
+      `,
+      )
+      .eq("role", "investor")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      return {
+        success: false,
+        data: [],
+        message: error.message,
+      };
+    }
+
+    return {
+      success: true,
+      data: data ?? [],
+      message: "Investors fetched successfully.",
+    };
+  } catch (error) {
+    const err = error as Error;
+
+    return {
+      success: false,
+      data: [],
+      message: err.message,
+    };
+  }
+};
+export const updateInvestorVerificationFns = async (
+  investorId: string,
+  isVerified: boolean,
+) => {
+  try {
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        is_verified: isVerified,
+      })
+      .eq("id", investorId)
+      .eq("role", "investor");
+
+    if (error) {
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
+
+    return {
+      success: true,
+      message: `Investor account ${
+        isVerified ? "enabled" : "disabled"
+      } successfully.`,
+    };
+  } catch (error) {
+    const err = error as Error;
+
+    return {
+      success: false,
+      message: err.message,
+    };
+  }
+};
+
+export const fetchMentorsFns = async () => {
+  try {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select(
+        `
+        id,
+        full_name,
+        email,
+        avatar_path,
+        approval_status,
+        is_verified,
+        created_at
+      `,
+      )
+      .eq("role", "mentor")
+      .order("created_at", {
+        ascending: false,
+      });
+
+    if (error) {
+      return {
+        success: false,
+        data: [],
+        message: error.message,
+      };
+    }
+
+    return {
+      success: true,
+      data: data ?? [],
+      message: "Mentors fetched successfully.",
+    };
+  } catch (error) {
+    const err = error as Error;
+
+    return {
+      success: false,
+      data: [],
+      message: err.message,
+    };
+  }
+};
+export const updateMentorVerificationFns = async (
+  mentorId: string,
+  isVerified: boolean,
+) => {
+  try {
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        is_verified: isVerified,
+      })
+      .eq("id", mentorId)
+      .eq("role", "mentor");
+
+    if (error) {
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
+
+    return {
+      success: true,
+      message: `Mentor account ${
+        isVerified ? "enabled" : "disabled"
+      } successfully.`,
+    };
+  } catch (error) {
+    const err = error as Error;
+
+    return {
+      success: false,
+      message: err.message,
     };
   }
 };

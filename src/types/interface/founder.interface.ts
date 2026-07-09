@@ -1,3 +1,4 @@
+import { ApprovalStatus } from "../enum/enum";
 
 export interface FounderStartup {
   id: string;
@@ -11,7 +12,7 @@ export interface Founder {
   email: string;
   avatar_path: string | null;
 
-  approval_status: string;
+  approval_status: ApprovalStatus;
   is_verified: boolean;
 
   created_at: string;

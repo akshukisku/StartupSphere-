@@ -118,3 +118,40 @@ export interface AdminDashboardResponse {
 
   mentorshipStatus: MentorshipStatus[];
 }
+
+export interface Investor {
+  id: string;
+
+  full_name: string;
+
+  email: string;
+
+  avatar_path: string | null;
+
+  approval_status:
+    | "approved"
+    | "pending"
+    | "rejected";
+
+  is_verified: boolean;
+
+  created_at: string;
+}
+export interface Mentor {
+  id: string;
+
+  full_name: string;
+
+  email: string;
+
+  avatar_path: string | null;
+
+  approval_status:
+    | "approved"
+    | "pending"
+    | "rejected";
+
+  is_verified: boolean;
+
+  created_at: string;
+}

@@ -1,62 +1,40 @@
 "use client";
 
 import {
-  Eye,
   CheckCircle2,
   Ban,
 } from "lucide-react";
 
 import {
   DropdownMenuItem,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
 import UserActionDialog from "@/app/admin/UserActionDialog";
-
-import { Founder } from "@/types/interface/founder.interface";
-
-import { useAdminStore } from "@/store/useAdminStore";
 import AdminActionMenu from "@/components/dashboard/AdminActionMenu";
-import { useUpdateFounderVerification } from "@/hooks/admin/useFounder";
+
+import { Investor } from "@/types/interface/admin.interface";
+import { useUpdateInvestorVerification } from "@/hooks/admin/useInvestorManagement";
 
 
-interface FounderActionsProps {
-  founder: Founder;
+interface InvestorActionsProps {
+  investor: Investor;
 }
 
-const FounderActions = ({
-  founder,
-}: FounderActionsProps) => {
-  const openStartupPreview = useAdminStore(
-    (state) => state.openStartupPreview
-  );
-
+const InvestorActions = ({
+  investor,
+}: InvestorActionsProps) => {
   const { mutateAsync } =
-    useUpdateFounderVerification();
+    useUpdateInvestorVerification();
 
   return (
     <AdminActionMenu>
-      <DropdownMenuItem
-        disabled={!founder.startup}
-        onClick={() => {
-          if (founder.startup) {
-            openStartupPreview(founder.startup.id);
-          }
-        }}
-      >
-        <Eye className="mr-2 h-4 w-4" />
-        View Startup
-      </DropdownMenuItem>
-
-      <DropdownMenuSeparator />
-
-      {founder.is_verified ? (
+      {investor.is_verified ? (
         <UserActionDialog
-          title="Disable Founder"
-          description="Are you sure you want to disable this founder account?"
+          title="Disable Investor"
+          description="Are you sure you want to disable this investor account?"
           onConfirm={() =>
             mutateAsync({
-              founderId: founder.id,
+              investorId: investor.id,
               isVerified: false,
             })
           }
@@ -72,11 +50,11 @@ const FounderActions = ({
         />
       ) : (
         <UserActionDialog
-          title="Enable Founder"
-          description="Are you sure you want to enable this founder account?"
+          title="Enable Investor"
+          description="Are you sure you want to enable this investor account?"
           onConfirm={() =>
             mutateAsync({
-              founderId: founder.id,
+              investorId: investor.id,
               isVerified: true,
             })
           }
@@ -94,4 +72,4 @@ const FounderActions = ({
   );
 };
 
-export default FounderActions;
+export default InvestorActions;

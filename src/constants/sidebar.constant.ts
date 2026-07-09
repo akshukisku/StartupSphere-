@@ -11,6 +11,7 @@ import {
   BriefcaseBusiness,
   CalendarDays,
   ClipboardCheck,
+  GraduationCap,
 } from "lucide-react";
 
 export const founderMenu = [
@@ -110,6 +111,11 @@ export const adminMenu = [
     icon: Briefcase,
   },
   {
+    title: "Mentors",
+    url: "/admin/mentors",
+    icon: GraduationCap,
+  },
+  {
     title: "Users",
     url: "/admin/users",
     icon: Users,
@@ -120,7 +126,6 @@ export const adminMenu = [
     icon: ShieldCheck,
   },
 ];
-
 export const sidebarMenus = {
   founder: founderMenu,
   mentor: mentorMenu,

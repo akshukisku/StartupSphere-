@@ -4,25 +4,16 @@ import { Bell } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useNotifications } from "@/hooks/notifications/useNotification";
 import { useNotificationStore } from "@/store/useNotificationStore";
-
-
+import { useProfile } from "@/hooks/profile/useProfile";
+import { useUnreadNotificationCount } from "@/hooks/notifications/useNotification";
 
 const NotificationBell = () => {
-  const { data = [] } =
-    useNotifications();
-    const { toggle } =
-  useNotificationStore();
+  const { data: profile } = useProfile();
 
-  const unreadCount =
-  data?.reduce(
-    (count, notification) =>
-      notification.is_read
-        ? count
-        : count + 1,
-    0
-  ) ?? 0;
+  const { toggle } = useNotificationStore();
+
+  const { data: unreadCount = 0 } = useUnreadNotificationCount(profile?.id);
 
   return (
     <Button
@@ -46,9 +37,7 @@ const NotificationBell = () => {
             text-[10px]
           "
         >
-          {unreadCount > 99
-            ? "99+"
-            : unreadCount}
+          {unreadCount > 99 ? "99+" : unreadCount}
         </Badge>
       )}
     </Button>

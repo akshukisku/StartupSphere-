@@ -5,9 +5,9 @@ import { useEffect } from "react";
 import DynamicTable from "@/components/common/DynamicTable";
 
 import { startupColumns } from "./AdminStartupColumns";
-import AdminStartupDialog from "./AdminStartupDialog";
 import AdminRejectDialog from "./AdminRejectDialog";
 import { usePendingStartups } from "@/hooks/admin/useAdmin";
+import StartupPreviewDialog from "@/layout/startup/preview/StartupPreviewDialog";
 
 const AdminStartupReview = () => {
   const { data: pendingStartups, isPending, isError } = usePendingStartups();
@@ -28,7 +28,7 @@ const AdminStartupReview = () => {
         isLoading={isPending}
         emptyMessage="No pending startups found."
       />
-      <AdminStartupDialog />
+      <StartupPreviewDialog />
       <AdminRejectDialog />
     </>
   );

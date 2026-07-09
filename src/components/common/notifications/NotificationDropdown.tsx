@@ -15,11 +15,15 @@ import { useNotificationStore } from "@/store/useNotificationStore";
 
 import NotificationCard from "./NotificationCard";
 import EmptyNotification from "./EmptyNotification";
+import { useProfile } from "@/hooks/profile/useProfile";
 
 const NotificationDropdown = () => {
   const { isOpen, close } = useNotificationStore();
 
-  const { data = [], isLoading } = useNotifications();
+  const { data: profile } = useProfile();
+
+  const { data = [], isLoading } = useNotifications(profile?.id);
+
   const unreadCount = data.filter(
     (notification) => !notification.is_read,
   ).length;
@@ -156,7 +160,11 @@ const NotificationDropdown = () => {
                 variant="outline"
                 className="w-full rounded-xl"
                 disabled={isPending || unreadCount === 0}
-                onClick={() => markAllAsRead()}
+                onClick={() => {
+                  if (profile?.id) {
+                    markAllAsRead(profile.id);
+                  }
+                }}
               >
                 {isPending ? "Updating..." : "Mark all as read"}
               </Button>

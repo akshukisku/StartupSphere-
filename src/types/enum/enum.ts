@@ -17,3 +17,9 @@ export enum StartupStatus {
   APPROVED = "approved",
   REJECTED = "rejected",
 }
+export enum NotificationType {
+  STARTUP = "startup",
+  INVESTMENT = "investment",
+  MENTOR = "mentor",
+  SYSTEM = "system",
+}

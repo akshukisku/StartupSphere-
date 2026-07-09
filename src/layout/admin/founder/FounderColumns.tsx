@@ -5,7 +5,11 @@ import { Badge } from "@/components/ui/badge";
 
 import { TableColumn } from "@/types/type/table.type";
 import { Founder } from "@/types/interface/founder.interface";
+
 import FounderActions from "./FounderActions";
+import AdminApprovalBadge from "@/components/dashboard/AdminApprovalBadge";
+import AdminAccountBadge from "@/components/dashboard/AdminAccountBadge";
+
 
 
 export const founderColumns: TableColumn<Founder>[] = [
@@ -16,19 +20,26 @@ export const founderColumns: TableColumn<Founder>[] = [
     render: (founder) => (
       <div className="flex items-center gap-3">
         <Avatar className="h-10 w-10">
-          <AvatarImage src={founder.avatar_path ?? ""} />
+          <AvatarImage
+            src={founder.avatar_path ?? ""}
+            alt={founder.full_name}
+          />
 
           <AvatarFallback>
-            {founder.full_name.charAt(0)}
+            {founder.full_name
+              .split(" ")
+              .map((name) => name[0])
+              .join("")
+              .toUpperCase()}
           </AvatarFallback>
         </Avatar>
 
-        <div>
-          <p className="font-medium">
+        <div className="min-w-0">
+          <p className="truncate font-medium">
             {founder.full_name}
           </p>
 
-          <p className="text-sm text-muted-foreground">
+          <p className="truncate text-sm text-muted-foreground">
             {founder.email}
           </p>
         </div>
@@ -46,7 +57,7 @@ export const founderColumns: TableColumn<Founder>[] = [
           {founder.startup.startup_name}
         </Badge>
       ) : (
-        <span className="text-muted-foreground">
+        <span className="text-sm text-muted-foreground">
           No Startup
         </span>
       ),
@@ -57,17 +68,9 @@ export const founderColumns: TableColumn<Founder>[] = [
     key: "approval_status",
 
     render: (founder) => (
-      <Badge
-        variant={
-          founder.approval_status === "approved"
-            ? "default"
-            : founder.approval_status === "pending"
-            ? "secondary"
-            : "destructive"
-        }
-      >
-        {founder.approval_status}
-      </Badge>
+      <AdminApprovalBadge
+        status={founder.approval_status}
+      />
     ),
   },
 
@@ -76,17 +79,9 @@ export const founderColumns: TableColumn<Founder>[] = [
     key: "is_verified",
 
     render: (founder) => (
-      <Badge
-        variant={
-          founder.is_verified
-            ? "default"
-            : "secondary"
-        }
-      >
-        {founder.is_verified
-          ? "Active"
-          : "Disabled"}
-      </Badge>
+    <AdminAccountBadge
+  isVerified={founder.is_verified}
+/>
     ),
   },
 
@@ -95,7 +90,14 @@ export const founderColumns: TableColumn<Founder>[] = [
     key: "created_at",
 
     render: (founder) =>
-      new Date(founder.created_at).toLocaleDateString(),
+      new Date(founder.created_at).toLocaleDateString(
+        "en-IN",
+        {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }
+      ),
   },
 
   {

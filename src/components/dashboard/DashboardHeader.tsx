@@ -7,7 +7,12 @@ import ThemeToggle from "../ToggleTheme";
 import NavUser from "./NavUser";
 import NotificationBell from "../common/notifications/NotificationBell";
 import NotificationDropdown from "../common/notifications/NotificationDropdown";
+import { useProfile } from "@/hooks/profile/useProfile";
+import { useNotificationRealtime } from "@/hooks/notifications/useNotificationRealtime";
+
 const DashboardHeader = ({ title }: { title: string }) => {
+  const { data: profile } = useProfile();
+  useNotificationRealtime(profile?.id);
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b bg-background px-6">
       <div className="flex items-center gap-3">
