@@ -1,14 +1,15 @@
 "use client";
 
-import { Bell } from "lucide-react";
-
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Button } from "@/components/ui/button";
 
 import ThemeToggle from "../ToggleTheme";
 import NavUser from "./NavUser";
 import NotificationBell from "../common/notifications/NotificationBell";
 import NotificationDropdown from "../common/notifications/NotificationDropdown";
+
+import { useProfile } from "@/hooks/profile/useProfile";
+import { useNotificationRealtime } from "@/hooks/notifications/useNotificationRealtime";
+import { useProfilesRealtime } from "@/hooks/realtime/useProfilesRealtime";
 
 interface AdminHeaderProps {
   title?: string;
@@ -19,6 +20,11 @@ const AdminHeader = ({
   title = "Admin Panel",
   description = "Manage users and platform operations",
 }: AdminHeaderProps) => {
+  const { data: profile } = useProfile();
+
+  useNotificationRealtime(profile?.id);
+  useProfilesRealtime();
+
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b bg-background px-6">
       <div className="flex items-center gap-3">
@@ -36,8 +42,8 @@ const AdminHeader = ({
       </div>
 
       <div className="flex items-center gap-3">
-       <NotificationBell />
-         <NotificationDropdown />
+        <NotificationBell />
+        <NotificationDropdown />
 
         <ThemeToggle />
 

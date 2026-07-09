@@ -16,6 +16,8 @@ const DashboardHeader = ({ title }: { title: string }) => {
   const { data: profile } = useProfile();
   useNotificationRealtime(profile?.id);
   useProfilesRealtime();
+    console.log("DashboardHeader Rendered");
+
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b bg-background px-6">
       <div className="flex items-center gap-3">
