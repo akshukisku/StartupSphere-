@@ -7,6 +7,17 @@ import { X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import { LayoutDashboard, LogOut, UserCircle } from "lucide-react";
+
 const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Features", href: "/features" },
@@ -18,6 +29,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from "lucide-react";
 import { getDashboardRoute } from "@/lib/global.helper";
+import { supabase } from "@/lib/supabase.config";
 
 const Navbar = () => {
   const profile = useAuthStore((state) => state.profile);
@@ -32,6 +44,16 @@ const Navbar = () => {
       : accountStatus === "rejected"
         ? "/rejected"
         : dashboardPath;
+
+  const clearProfile = useAuthStore((state) => state.clearProfile);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+
+    clearProfile();
+
+    router.push("/login");
+  };
 
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
@@ -75,7 +97,7 @@ const Navbar = () => {
               <li key={link.label}>
                 <a
                   onClick={() => router.push(link.href)}
-                  className="px-3.5 py-2 text-sm hover:text-black transition-colors rounded-lg hover:bg-black/[0.06]"
+                  className="cursor-pointer px-3.5 py-2 text-sm hover:text-black transition-colors rounded-lg hover:bg-black/[0.06]"
                 >
                   {link.label}
                 </a>
@@ -88,20 +110,86 @@ const Navbar = () => {
             <ThemeToggle />
 
             {isAuthenticated ? (
-              <Link href={dashboardLink}>
-                <Avatar className="h-10 w-10 cursor-pointer ring-2 ring-primary/20 transition hover:ring-primary">
-                  <AvatarImage
-                    src={profile?.avatar_path ?? ""}
-                    alt={profile?.full_name}
-                  />
+              <div className="flex items-center gap-3">
+                {/* Dashboard Button */}
+                <Link
+                  href={dashboardLink}
+                  className="
+        relative
+        rounded-full
+        bg-primary
+        px-5
+        py-2
+        text-sm
+        font-medium
+        text-primary-foreground
+        shadow-lg
+        shadow-primary/40
+        transition
+        hover:scale-105
+        hover:shadow-primary/70
+        animate-pulse
+      "
+                >
+                  Dashboard
+                </Link>
 
-                  <AvatarFallback>
-                    {profile?.full_name?.charAt(0).toUpperCase() ?? (
-                      <User className="h-5 w-5" />
-                    )}
-                  </AvatarFallback>
-                </Avatar>
-              </Link>
+                {/* Avatar Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Avatar className="h-10 w-10 cursor-pointer ring-2 ring-primary/20 transition hover:ring-primary">
+                      <AvatarImage
+                        src={profile?.avatar_path ?? ""}
+                        alt={profile?.full_name}
+                      />
+
+                      <AvatarFallback>
+                        {profile?.full_name?.charAt(0).toUpperCase() ?? (
+                          <User className="h-5 w-5" />
+                        )}
+                      </AvatarFallback>
+                    </Avatar>
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent align="end" className="w-60">
+                    <DropdownMenuLabel>
+                      <div className="flex flex-col">
+                        <span className="font-semibold">
+                          {profile?.full_name}
+                        </span>
+
+                        <span className="text-xs text-muted-foreground capitalize">
+                          {profile?.role}
+                        </span>
+                      </div>
+                    </DropdownMenuLabel>
+
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuItem
+                      onClick={() => router.push(dashboardLink)}
+                    >
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      Dashboard
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem onClick={() => router.push("/profile")}>
+                      <UserCircle className="mr-2 h-4 w-4" />
+                      Profile
+                    </DropdownMenuItem>
+
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuItem
+                      className="text-red-500 focus:text-red-500"
+                      onClick={handleLogout}
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Logout
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             ) : (
               <>
                 <Link

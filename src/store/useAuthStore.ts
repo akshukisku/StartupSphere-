@@ -95,4 +95,8 @@ export const useAuthStore = create<AuthState>((set) => ({
       role: profile?.role ?? null,
     });
   },
+  clearProfile: () =>
+  set({
+    profile: null,
+   }),
 }));

@@ -37,4 +37,5 @@ export interface AuthState {
   logout: () => Promise<void>;
 
   refreshProfileFromCookie: () => void;
+  clearProfile: () => void;
 }
