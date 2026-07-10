@@ -48,7 +48,7 @@ const ProfilePage = () => {
       role: profile.role,
 
       avatar: null,
-      avatar_path: profile.avatar_url ?? "",
+      avatar_path: profile.avatar_path ?? "",
 
       remove_avatar: false,
     });
@@ -77,11 +77,15 @@ const ProfilePage = () => {
       >
         <ProfileHeader />
 
-        <div className="grid gap-8 lg:grid-cols-12">
-          <div className="lg:col-span-4">
-            <ProfileAvatar />
+        <div className="grid grid-cols-1 gap-6 md:gap-8 lg:grid-cols-12 lg:items-start">
+          {/* Avatar */}
+          <div className="flex justify-center lg:col-span-4 lg:justify-start">
+            <div className="w-full max-w-sm">
+              <ProfileAvatar />
+            </div>
           </div>
 
+          {/* Form */}
           <div className="lg:col-span-8">
             <ProfileForm isSubmitting={updatingProfile} />
           </div>

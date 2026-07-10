@@ -36,7 +36,7 @@ const NavUser = () => {
   const { data: profile } = useProfile();
 
   const avatarUrl = useProfileAvatar(
-    profile?.avatar_url
+    profile?.avatar_path
   );
 
   const initials =

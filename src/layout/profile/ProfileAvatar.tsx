@@ -13,11 +13,9 @@ import { useProfileStore } from "@/store/useProfileStore";
 const ProfileAvatar = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { register, setValue, watch } =
-    useFormContext<ProfileFormValues>();
+  const { register, setValue, watch } = useFormContext<ProfileFormValues>();
 
   const avatarPath = watch("avatar_path");
-
   const {
     avatarPreview,
     setAvatar,
@@ -26,15 +24,19 @@ const ProfileAvatar = () => {
     setSignedAvatar,
   } = useProfileStore();
 
-useEffect(() => {
-  register("avatar");
-  register("remove_avatar");
-  register("avatar_path");
-}, [register]);
-
+  useEffect(() => {
+    register("avatar");
+    register("remove_avatar");
+    register("avatar_path");
+  }, [register]);
   useEffect(() => {
     if (!avatarPath) {
       resetAvatar();
+      return;
+    }
+
+    if (avatarPath.startsWith("http") || avatarPath.startsWith("blob:")) {
+      setSignedAvatar(avatarPath);
       return;
     }
 
@@ -49,9 +51,7 @@ useEffect(() => {
     loadAvatar();
   }, [avatarPath, resetAvatar, setSignedAvatar]);
 
-  const handleUpload = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
     if (!file) return;
@@ -63,6 +63,8 @@ useEffect(() => {
       shouldTouch: true,
       shouldValidate: true,
     });
+
+    setValue("avatar_path", "");
 
     setValue("remove_avatar", false);
   };
@@ -76,13 +78,14 @@ useEffect(() => {
       shouldValidate: true,
     });
 
+    setValue("avatar_path", "");
+
     setValue("remove_avatar", true);
 
     if (inputRef.current) {
       inputRef.current.value = "";
     }
   };
-
   return (
     <DashboardCard>
       <div className="flex flex-col items-center gap-5">
@@ -116,9 +119,7 @@ useEffect(() => {
         </button>
 
         <div className="text-center">
-          <h3 className="text-lg font-semibold">
-            Profile Photo
-          </h3>
+          <h3 className="text-lg font-semibold">Profile Photo</h3>
 
           <p className="text-xs text-muted-foreground">
             PNG, JPG or WEBP

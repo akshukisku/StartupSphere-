@@ -30,9 +30,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from "lucide-react";
 import { getDashboardRoute } from "@/lib/global.helper";
 import { supabase } from "@/lib/supabase.config";
+import { useProfileAvatar } from "@/hooks/profile/useProfile";
 
 const Navbar = () => {
   const profile = useAuthStore((state) => state.profile);
+  const avatarUrl = useProfileAvatar(profile?.avatar_path);
   const isAuthenticated = !!profile;
 
   const dashboardPath = getDashboardRoute(profile?.role);
@@ -138,10 +140,7 @@ const Navbar = () => {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Avatar className="h-10 w-10 cursor-pointer ring-2 ring-primary/20 transition hover:ring-primary">
-                      <AvatarImage
-                        src={profile?.avatar_path ?? ""}
-                        alt={profile?.full_name}
-                      />
+                      <AvatarImage src={avatarUrl} alt={profile?.full_name} />
 
                       <AvatarFallback>
                         {profile?.full_name?.charAt(0).toUpperCase() ?? (

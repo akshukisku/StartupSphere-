@@ -1,4 +1,4 @@
-  @import "tailwindcss";
+@import "tailwindcss";
   @import "tw-animate-css";
   @import "shadcn/tailwind.css";
 
@@ -83,100 +83,116 @@
     }
   }
 }
+
   :root {
-    --background: #ffffff;
-    --foreground: #2d3552;
+    /* Base Background is the Soft Yellow */
+    --background: #fbf3b9;
+    /* Rich Deep Slate/Navy contrast for readability on warm tone */
+    --foreground: #2a2438;
 
-    --card: #f8f9ff;
-    --card-foreground: #2d3552;
+    /* Card uses the Soft Peach */
+    --card: #ffdccc;
+    --card-foreground: #2a2438;
 
-    --popover: #ffffff;
-    --popover-foreground: #2d3552;
+    --popover: #ffdccc;
+    --popover-foreground: #2a2438;
 
-    --primary: #9fa1ff;
-    --primary-foreground: #ffffff;
+    /* Primary Accent is the Lavender */
+    --primary: #b7b1f2;
+    --primary-foreground: #2a2438;
 
-    --secondary: #b5baff;
-    --secondary-foreground: #2d3552;
+    /* Secondary Accent is the Soft Pink */
+    --secondary: #fdb7ea;
+    --secondary-foreground: #2a2438;
 
-    --muted: #eef4ff;
-    --muted-foreground: #6b7280;
+    /* Muted states blend with the yellow base */
+    --muted: #f5ecc1;
+    --muted-foreground: #5c5470;
 
-    --accent: #aee2ff;
-    --accent-foreground: #2d3552;
+    --accent: #b7b1f2;
+    --accent-foreground: #2a2438;
 
     --destructive: #ef4444;
 
-    --border: #e5e7eb;
-    --input: #e5e7eb;
-    --ring: #9fa1ff;
+    /* Borders sit softly between the peach and yellow */
+    --border: #e3d8ab;
+    --input: #e3d8ab;
+    --ring: #b7b1f2;
 
-    --chart-1: #9fa1ff;
-    --chart-2: #b5baff;
-    --chart-3: #aee2ff;
-    --chart-4: #d9f9df;
-    --chart-5: #6b7280;
+    /* Chart mappings using the Light theme palette */
+    --chart-1: #b7b1f2;
+    --chart-2: #fdb7ea;
+    --chart-3: #ffdccc;
+    --chart-4: #fbf3b9;
+    --chart-5: #5c5470;
 
     --radius: .75rem;
 
-    --sidebar: #f8f9ff;
-    --sidebar-foreground: #2d3552;
+    --sidebar: #ffdccc;
+    --sidebar-foreground: #2a2438;
 
-    --sidebar-primary: #9fa1ff;
-    --sidebar-primary-foreground: #ffffff;
+    --sidebar-primary: #b7b1f2;
+    --sidebar-primary-foreground: #2a2438;
 
-    --sidebar-accent: #eef4ff;
-    --sidebar-accent-foreground: #2d3552;
+    --sidebar-accent: #f5ecc1;
+    --sidebar-accent-foreground: #2a2438;
 
-    --sidebar-border: #e5e7eb;
-    --sidebar-ring: #9fa1ff;
+    --sidebar-border: #e3d8ab;
+    --sidebar-ring: #b7b1f2;
   }
 
   .dark {
-    --background: #1b262c;
-    --foreground: #bbe1fa;
+    /* Deep background */
+    --background: #18122b;
+    /* High contrast light lilac text */
+    --foreground: #e2def2;
 
-    --card: #22343c;
-    --card-foreground: #bbe1fa;
+    /* Elevated Dark Neutral */
+    --card: #393053;
+    --card-foreground: #e2def2;
 
-    --popover: #22343c;
-    --popover-foreground: #bbe1fa;
+    --popover: #393053;
+    --popover-foreground: #e2def2;
 
-    --primary: #0f4c75;
+    /* Primary Accent is the brightest purple element */
+    --primary: #635985;
     --primary-foreground: #ffffff;
 
-    --secondary: #3282b8;
-    --secondary-foreground: #ffffff;
+    /* Secondary Accent is the mid-tone purple */
+    --secondary: #443c68;
+    --secondary-foreground: #e2def2;
 
-    --muted: #24343b;
-    --muted-foreground: #9fb9c9;
+    --muted: #251d3a;
+    --muted-foreground: #a69fcc;
 
-    --accent: #3282b8;
+    --accent: #635985;
     --accent-foreground: #ffffff;
 
     --destructive: #dc2626;
 
-    --border: #31444d;
-    --input: #31444d;
-    --ring: #3282b8;
+    /* Clean structural borders */
+    --border: #443c68;
+    --input: #443c68;
+    --ring: #635985;
 
-    --chart-1: #0f4c75;
-    --chart-2: #3282b8;
-    --chart-3: #bbe1fa;
-    --chart-4: #7cb7dc;
-    --chart-5: #94d5ff;
+    /* Chart mappings using the Dark theme palette */
+    --chart-1: #635985;
+    --chart-2: #443c68;
+    --chart-3: #393053;
+    --chart-4: #18122b;
+    --chart-5: #a69fcc;
 
-    --sidebar: #162126;
-    --sidebar-foreground: #bbe1fa;
+    --sidebar: #18122b;
+    --sidebar-foreground: #e2def2;
 
-    --sidebar-primary: #0f4c75;
+    --sidebar-primary: #635985;
     --sidebar-primary-foreground: #ffffff;
 
-    --sidebar-accent: #24343b;
-    --sidebar-accent-foreground: #bbe1fa;
+    --sidebar-accent: #393053;
+    --sidebar-accent-foreground: #e2def2;
 
-    --sidebar-border: #31444d;
-    --sidebar-ring: #3282b8;
+    --sidebar-border: #443c68;
+    --sidebar-ring: #635985;
   }
 
   @layer base {
@@ -196,31 +212,34 @@
 
   @layer utilities {
 
+    /* Light dynamic gradient blending Lavender, Pink, and Peach */
     .gradient-primary {
       background: linear-gradient(
         135deg,
-        #9fa1ff 0%,
-        #aee2ff 55%,
-        #d9f9df 100%
+        #b7b1f2 0%,
+        #fdb7ea 50%,
+        #ffdccc 100%
       );
     }
 
+    /* Dark dynamic gradient moving through the purple structural tones */
     .dark .gradient-primary {
       background: linear-gradient(
         135deg,
-        #0f4c75 0%,
-        #3282b8 60%,
-        #bbe1fa 100%
+        #18122b 0%,
+        #393053 50%,
+        #635985 100%
       );
     }
 
+    /* Glassmorphism utility with updated RGB matching values */
     .glass {
       @apply backdrop-blur-xl;
-      background: rgba(255,255,255,.75);
+      background: rgba(251, 243, 185, 0.7);
     }
 
     .dark .glass {
-      background: rgba(34,52,60,.75);
+      background: rgba(57, 48, 83, 0.7);
     }
 
     .gradient-card {
