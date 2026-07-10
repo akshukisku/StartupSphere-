@@ -23,7 +23,15 @@ const Navbar = () => {
   const profile = useAuthStore((state) => state.profile);
   const isAuthenticated = !!profile;
 
-const dashboardPath = getDashboardRoute(profile?.role);
+  const dashboardPath = getDashboardRoute(profile?.role);
+  const accountStatus = profile?.approval_status;
+
+  const dashboardLink =
+    accountStatus === "pending"
+      ? "/pending"
+      : accountStatus === "rejected"
+        ? "/rejected"
+        : dashboardPath;
 
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
@@ -80,7 +88,7 @@ const dashboardPath = getDashboardRoute(profile?.role);
             <ThemeToggle />
 
             {isAuthenticated ? (
-              <Link href={dashboardPath}>
+              <Link href={dashboardLink}>
                 <Avatar className="h-10 w-10 cursor-pointer ring-2 ring-primary/20 transition hover:ring-primary">
                   <AvatarImage
                     src={profile?.avatar_path ?? ""}
@@ -185,7 +193,7 @@ const dashboardPath = getDashboardRoute(profile?.role);
               >
                 {isAuthenticated ? (
                   <Link
-                    href={dashboardPath}
+                    href={dashboardLink}
                     onClick={() => setMenuOpen(false)}
                     className="w-full rounded-2xl bg-primary py-3.5 text-center font-semibold text-primary-foreground"
                   >

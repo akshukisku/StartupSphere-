@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+
 import { useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/lib/supabase.config";
@@ -12,6 +13,7 @@ export const useStartupsRealtime = () => {
   useEffect(() => {
     const channel = supabase
       .channel("startups-realtime")
+
       .on(
         "postgres_changes",
         {
@@ -20,31 +22,51 @@ export const useStartupsRealtime = () => {
           table: "startups",
         },
         async (payload) => {
-          console.log("🚀 STARTUP EVENT", payload);
+          console.log("🚀 Startup Realtime Event", payload);
 
           const startup = payload.new as {
             status?: StartupStatus;
           };
 
-          // Founder submitted startup
+          // ==========================
+          // Founder Startup Profile
+          // ==========================
+          await queryClient.refetchQueries({
+            queryKey: ["startup"],
+          });
+
+          // ==========================
+          // Admin Pending Startups
+          // ==========================
           if (
-            payload.eventType === "UPDATE" &&
+            payload.eventType === "INSERT" ||
             startup.status === StartupStatus.PENDING
           ) {
-            console.log("🔄 Refetch Pending Startups");
-
             await queryClient.refetchQueries({
               queryKey: ["admin-pending-startups"],
-              type: "active",
-            });
-
-            await queryClient.refetchQueries({
-              queryKey: ["admin-dashboard"],
-              type: "active",
             });
           }
+
+          // ==========================
+          // Investor Marketplace
+          // Refetches every startups query:
+          // ["startups", page, limit, search, industry, stage]
+          // ==========================
+          if (startup.status === StartupStatus.APPROVED) {
+            await queryClient.refetchQueries({
+              queryKey: ["startups"],
+            });
+          }
+
+          // ==========================
+          // Admin Dashboard
+          // ==========================
+          await queryClient.refetchQueries({
+            queryKey: ["admin-dashboard"],
+          });
         }
       )
+
       .subscribe((status) => {
         console.log("🚀 Startups Realtime:", status);
       });

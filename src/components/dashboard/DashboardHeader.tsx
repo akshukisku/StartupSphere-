@@ -10,12 +10,14 @@ import NotificationDropdown from "../common/notifications/NotificationDropdown";
 import { useProfile } from "@/hooks/profile/useProfile";
 import { useNotificationRealtime } from "@/hooks/notifications/useNotificationRealtime";
 import { useProfilesRealtime } from "@/hooks/realtime/useProfilesRealtime";
+import { useStartupsRealtime } from "@/hooks/realtime/useStartupsRealtime";
 
 const DashboardHeader = ({ title }: { title: string }) => {
   
   const { data: profile } = useProfile();
   useNotificationRealtime(profile?.id);
   useProfilesRealtime();
+  useStartupsRealtime();
     console.log("DashboardHeader Rendered");
 
   return (
