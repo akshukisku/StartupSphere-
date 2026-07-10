@@ -6,6 +6,7 @@ import {
   InstagramIcon,
   LinkedinIcon,
 } from "@animateicons/react/lucide";
+import Link from "next/link";
 
 const SOCIAL_LINKS = [
   { icon: TwitterIcon, label: "Twitter", href: "#" },
@@ -41,7 +42,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-16">
           {/* Brand */}
           <div className="flex flex-col gap-6 sm:col-span-2 lg:col-span-1">
-            <a href="#home" className="flex w-fit items-center gap-3">
+            <Link href="/" className="flex w-fit items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
                 <div className="h-4 w-4 rounded bg-primary-foreground" />
               </div>
@@ -50,7 +51,7 @@ const Footer = () => {
                 StartupSphere
                 <span className="text-primary">+</span>
               </span>
-            </a>
+            </Link>
 
             <p className="max-w-sm text-sm leading-7 text-muted-foreground">
               India's premier platform connecting founders, investors and

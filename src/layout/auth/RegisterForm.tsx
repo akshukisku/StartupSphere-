@@ -12,6 +12,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { UserRole } from "@/types/enum/enum";
+import Link from "next/link";
 
 const RegisterForm = () => {
   const { registerUser, isLoading } = useAuthStore();
@@ -137,7 +138,13 @@ const RegisterForm = () => {
         <p className="text-center text-slate-400">
           Already have an account?
           <span className="ml-2 cursor-pointer font-medium text-white">
-            Sign in
+            <Link
+            href="/login"
+            className="ml-2 font-medium text-white hover:text-lime-400"
+          >
+             Sign in
+          </Link>
+           
           </span>
         </p>
       </form>

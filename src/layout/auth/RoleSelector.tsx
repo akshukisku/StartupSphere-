@@ -1,6 +1,10 @@
 "use client";
 
-import { RocketIcon, BrainIcon, AtomIcon } from "@animateicons/react/lucide";
+import {
+  RocketIcon,
+  BrainIcon,
+  AtomIcon,
+} from "@animateicons/react/lucide";
 
 const roles = [
   {
@@ -25,11 +29,16 @@ interface Props {
   onChange: (role: string) => void;
 }
 
-export default function RoleSelector({ value, onChange }: Props) {
+export default function RoleSelector({
+  value,
+  onChange,
+}: Props) {
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
       {roles.map((role) => {
         const Icon = role.icon;
+
+        const selected = value === role.value;
 
         return (
           <button
@@ -37,39 +46,53 @@ export default function RoleSelector({ value, onChange }: Props) {
             type="button"
             onClick={() => onChange(role.value)}
             className={`
-group
-flex
-h-28
-flex-col
-items-center
-justify-center
-rounded-2xl
-border
-transition-all
-duration-300
+              group
+              flex
+              h-28
+              flex-col
+              items-center
+              justify-center
+              rounded-2xl
+              border
+              transition-all
+              duration-300
 
-${
-  value === role.value
-    ? "border-lime-400 bg-lime-400/10 shadow-lg shadow-lime-500/20"
-    : "border-slate-700 bg-slate-900/60 hover:border-slate-500"
-}
-`}
+              ${
+                selected
+                  ? "border-primary bg-primary/10 shadow-lg shadow-primary/20"
+                  : "border-border bg-card hover:border-primary/40 hover:bg-muted"
+              }
+            `}
           >
             <Icon
               size={32}
               className={`
-    mb-3
-    transition-all
-    duration-300
+                mb-3
+                transition-all
+                duration-300
+                group-hover:scale-110
 
-    ${value === role.value ? "text-lime-400" : "text-slate-300"}
-  `}
+                ${
+                  selected
+                    ? "text-primary"
+                    : "text-muted-foreground group-hover:text-primary"
+                }
+              `}
             />
 
             <p
-              className={`text-sm font-medium ${
-                value === role.value ? "text-lime-400" : "text-white"
-              }`}
+              className={`
+                text-sm
+                font-medium
+                transition-colors
+                duration-300
+
+                ${
+                  selected
+                    ? "text-primary"
+                    : "text-foreground group-hover:text-primary"
+                }
+              `}
             >
               {role.label}
             </p>

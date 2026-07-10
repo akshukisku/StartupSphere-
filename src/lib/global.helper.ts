@@ -123,3 +123,44 @@ export const getSessionStatusClass = (
       return "";
   }
 };
+
+export const TRUSTED_COMPANIES = [
+  "Y Combinator",
+  "Sequoia India",
+  "Blume Ventures",
+  "Accel Partners",
+  "IIT Bombay",
+  "IIM Ahmedabad",
+  "NASSCOM",
+  "Startup India",
+  "Kalaari Capital",
+  "Matrix Partners",
+  "Peak XV",
+  "Elevation Capital",
+];
+export const STARTUP_CATEGORIES = [
+  { icon: "Brain", label: "AI & ML" },
+  { icon: "Landmark", label: "FinTech" },
+  { icon: "HeartPulse", label: "HealthTech" },
+  { icon: "GraduationCap", label: "EdTech" },
+  { icon: "Cloud", label: "SaaS" },
+  { icon: "ShieldCheck", label: "Cyber Security" },
+  { icon: "Leaf", label: "Climate Tech" },
+  { icon: "Link2", label: "Blockchain" },
+];
+
+export const FOUNDER_FEATURES = [
+  "Manage your startup and team from one place",
+  "Upload and share your pitch deck securely",
+  "Track funding conversations and term sheets",
+  "Deep analytics on investor engagement",
+  "Collaborate with co-founders and advisors",
+];
+
+export const INVESTOR_FEATURES = [
+  "Access verified, high-quality startup profiles",
+  "Filter by sector, stage, geography, and traction",
+  "Detailed startup analytics and growth metrics",
+  "Build and manage a private watchlist",
+  "Track your entire investment pipeline",
+];
