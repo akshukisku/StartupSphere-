@@ -23,7 +23,7 @@ const AdminUsersPage = () => {
   const handleApprove = async (userId: string) => {
     await approveUser(userId);
   };
-
+  
   const handleReject = async (userId: string) => {
     await rejectUser(userId);
   };

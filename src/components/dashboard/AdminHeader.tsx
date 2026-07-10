@@ -11,6 +11,7 @@ import { useProfile } from "@/hooks/profile/useProfile";
 import { useNotificationRealtime } from "@/hooks/notifications/useNotificationRealtime";
 import { useProfilesRealtime } from "@/hooks/realtime/useProfilesRealtime";
 import { useRealtimeTest } from "@/hooks/realtime/useRealtimeTest";
+import { useStartupsRealtime } from "@/hooks/realtime/useStartupsRealtime";
 
 interface AdminHeaderProps {
   title?: string;
@@ -25,20 +26,17 @@ const AdminHeader = ({
 
   useNotificationRealtime(profile?.id);
   useProfilesRealtime();
-useRealtimeTest()
+  useStartupsRealtime();
+  useRealtimeTest();
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b bg-background px-6">
       <div className="flex items-center gap-3">
         <SidebarTrigger />
 
         <div>
-          <h2 className="text-xl font-semibold">
-            {title}
-          </h2>
+          <h2 className="text-xl font-semibold">{title}</h2>
 
-          <p className="text-xs text-muted-foreground">
-            {description}
-          </p>
+          <p className="text-xs text-muted-foreground">{description}</p>
         </div>
       </div>
 

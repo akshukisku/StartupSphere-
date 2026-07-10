@@ -23,7 +23,7 @@ export const useRealtimeTest = () => {
       )
 
       .subscribe((status) => {
-        console.log("Test Status:", status);
+        // console.log("Test Status:", status);
       });
 
     return () => {
