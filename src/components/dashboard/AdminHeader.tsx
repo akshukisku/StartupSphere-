@@ -10,6 +10,7 @@ import NotificationDropdown from "../common/notifications/NotificationDropdown";
 import { useProfile } from "@/hooks/profile/useProfile";
 import { useNotificationRealtime } from "@/hooks/notifications/useNotificationRealtime";
 import { useProfilesRealtime } from "@/hooks/realtime/useProfilesRealtime";
+import { useRealtimeTest } from "@/hooks/realtime/useRealtimeTest";
 
 interface AdminHeaderProps {
   title?: string;
@@ -24,7 +25,7 @@ const AdminHeader = ({
 
   useNotificationRealtime(profile?.id);
   useProfilesRealtime();
-
+useRealtimeTest()
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b bg-background px-6">
       <div className="flex items-center gap-3">

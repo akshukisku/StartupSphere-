@@ -32,6 +32,10 @@ const AdminUsersPage = () => {
     {
       header: "Name",
       key: "full_name",
+      render: (row) =>
+        row.full_name ?? (
+          <span className="text-muted-foreground">Loading...</span>
+        ),
     },
     {
       header: "Email",
@@ -40,7 +44,12 @@ const AdminUsersPage = () => {
     {
       header: "Role",
       key: "role",
-      render: (row) => row.role.charAt(0).toUpperCase() + row.role.slice(1),
+      render: (row) =>
+        row.role ? (
+          row.role.charAt(0).toUpperCase() + row.role.slice(1)
+        ) : (
+          <Badge variant="outline">Loading...</Badge>
+        ),
     },
     {
       header: "Status",
