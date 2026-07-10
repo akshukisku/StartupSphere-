@@ -12,21 +12,14 @@ import PromptCard from "./PromptCard";
 import { AnimatePresence } from "framer-motion";
 
 const SuggestedPrompts = () => {
-  const { currentPrompt, nextPrompt, previousPrompt, addMessage } =
+  const { currentPrompt, nextPrompt, previousPrompt, addMessage,sendMessage } =
     useAiChatStore();
 
   const prompt = AI_PROMPTS[currentPrompt];
-
-  const handleTry = () => {
-    addMessage({
-      id: crypto.randomUUID(),
-      role: "user",
-      content: prompt.prompt,
-      createdAt: new Date().toISOString(),
-    });
-
-    // Gemini integration will come later
-  };
+  
+const handleTry = async () => {
+  await sendMessage(prompt.prompt);
+};
 
   return (
     <div className="space-y-5">

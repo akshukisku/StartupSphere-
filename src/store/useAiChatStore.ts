@@ -6,6 +6,7 @@ import {
   ChatMessage,
 } from "@/types/interface/ai.interface";
 import { AI_PROMPTS } from "@/constants/ai-prompts";
+import { generateAIResponseFns } from "@/api/function/ai.function";
 
 interface AiChatStore {
   // Window
@@ -51,6 +52,7 @@ interface AiChatStore {
   previousPrompt: () => void;
 
   setCurrentPrompt: (index: number) => void;
+  sendMessage: (message: string) => Promise<void>;
 }
 
 export const useAiChatStore = create<AiChatStore>((set) => ({
@@ -163,4 +165,43 @@ export const useAiChatStore = create<AiChatStore>((set) => ({
           ? AI_PROMPTS.length - 1
           : state.currentPrompt - 1,
     })),
+    sendMessage: async (content) => {
+  const state = useAiChatStore.getState();
+
+  const userMessage = {
+    id: crypto.randomUUID(),
+    role: "user" as const,
+    content,
+    createdAt: new Date().toISOString(),
+  };
+
+  state.addMessage(userMessage);
+
+  state.setTyping(true);
+
+  const response = await generateAIResponseFns({
+    message: content,
+    language: state.language,
+  });
+
+  state.setTyping(false);
+
+  if (!response.success) {
+    state.addMessage({
+      id: crypto.randomUUID(),
+      role: "assistant",
+      content: response.message,
+      createdAt: new Date().toISOString(),
+    });
+
+    return;
+  }
+
+  state.addMessage({
+    id: crypto.randomUUID(),
+    role: "assistant",
+    content: response.data ?? "No response.",
+    createdAt: new Date().toISOString(),
+  });
+},
 }));

@@ -8,34 +8,37 @@ const AiChatWindow = () => {
   return (
     <div
       className="
-      fixed
-      bottom-24
-      right-6
-      z-50
+        fixed
+        inset-x-3
+        bottom-3
+        z-50
 
-      flex
+        flex
+        h-[calc(100vh-6rem)]
+        max-h-[700px]
+        w-auto
+        flex-col
 
-      h-[550px]
-      w-[420px]
+        overflow-hidden
 
-      flex-col
+        rounded-3xl
+        border
+        border-border/50
 
-      overflow-hidden
+        bg-background/95
+        backdrop-blur-2xl
 
-      rounded-3xl
+        shadow-2xl
 
-      border
+        sm:bottom-6
+        sm:right-6
+        sm:left-auto
+        sm:h-[600px]
+        sm:w-[420px]
 
-      border-white/10
-
-      bg-white/10
-
-      backdrop-blur-3xl
-
-      shadow-[0_20px_80px_rgba(0,0,0,.35)]
-
-      dark:bg-zinc-900/40
-    "
+        lg:h-[650px]
+        lg:w-[440px]
+      "
     >
       <AiHeader />
 
