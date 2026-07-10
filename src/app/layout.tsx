@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
-
 import "./globals.css";
-
 import Providers from "./providers";
+import localFont from "next/font/local";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
-const Helvetica = localFont({
+const Helvatica = localFont({
   src: [
     {
       path: "../fonts/HelveticaNeueLight.otf",
@@ -14,12 +12,11 @@ const Helvetica = localFont({
       style: "normal",
     },
   ],
-  variable: "--font-helvetica",
-  display: "swap",
+  variable: "--font-helvatica",
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://startupsphereplus.com"),
+  metadataBase: new URL("https://startup-sphere-xi.vercel.app"),
 
   title: {
     default: "StartupSphere+ | AI Startup Incubation & Investment Platform",
@@ -81,7 +78,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://startupsphereplus.com",
+    url: "https://startup-sphere-xi.vercel.app",
     siteName: "StartupSphere+",
     title: "StartupSphere+ | AI Startup Incubation & Investment Platform",
     description:
@@ -102,7 +99,6 @@ export const metadata: Metadata = {
     title: "StartupSphere+",
     description:
       "AI-powered startup incubation and investment platform.",
-
     images: ["/images/og-image.png"],
   },
 
@@ -118,17 +114,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  console.log("Root Mounted")
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={`${Helvetica.variable} h-full antialiased`}
-    >
-      <body className="min-h-screen bg-background font-sans">
+    <html lang="en" className={`${Helvatica.className} h-full antialiased`}>
+      <body className="min-h-full flex flex-col">
         <Providers>
-          <TooltipProvider>
-            {children}
-          </TooltipProvider>
+          <TooltipProvider>{children}</TooltipProvider>
         </Providers>
       </body>
     </html>
