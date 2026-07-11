@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useStartupDetails } from "@/hooks/investor/useInvestor";
 import StartupHero from "./StartupHero";
+import InvestmentDialog from "@/components/investment/InvestmentDialog";
 
 interface StartupDetailsProps {
   startupId: string;
@@ -21,6 +22,7 @@ const StartupDetails = ({
     isPending,
     isError,
   } = useStartupDetails(startupId);
+  
 
   if (isPending) {
     return <div>Loading...</div>;
@@ -68,6 +70,7 @@ const StartupDetails = ({
         </p>
       </div>
       <StartupHero startup={data} />
+      
     </div>
   );
 };

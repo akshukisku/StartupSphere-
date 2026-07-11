@@ -1,5 +1,5 @@
 import { BookmarkCheckIcon, SearchIcon, Settings01Icon } from "@animateicons/react/huge";
-import { UserCheckIcon, UserIcon } from "@animateicons/react/lucide";
+import { HandCoinsIcon, UserCheckIcon, UserIcon } from "@animateicons/react/lucide";
 import {
   LayoutDashboard,
   Rocket,
@@ -29,6 +29,11 @@ export const founderMenu = [
   title: "Pitch Deck",
   url: "/founder/pitch-deck",
   icon: FileText,
+},
+{
+  title: "Investment Requests",
+  url: "/founder/investment-requests",
+  icon: HandCoinsIcon, // or DollarSign, BriefcaseBusiness
 }
 ];
 

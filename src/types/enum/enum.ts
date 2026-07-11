@@ -23,3 +23,8 @@ export enum NotificationType {
   MENTOR = "mentor",
   SYSTEM = "system",
 }
+export enum InvestmentStatus {
+  PENDING = "pending",
+  ACCEPTED = "accepted",
+  REJECTED = "rejected",
+}
