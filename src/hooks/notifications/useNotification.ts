@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 import {
   createNotification,
+  fetchFounderNotificationsFns,
   fetchNotifications,
   fetchUnreadNotificationCount,
   markAllNotificationsAsRead,
@@ -147,6 +148,22 @@ export const useMarkAllNotificationsAsRead = () => {
 
     onError: () => {
       toast.error("Something went wrong.");
+    },
+  });
+};
+export const useFounderNotifications = () => {
+  return useQuery({
+    queryKey: ["founder-notifications"],
+
+    queryFn: async () => {
+      const response =
+        await fetchFounderNotificationsFns();
+
+      if (!response.success) {
+        throw new Error(response.message);
+      }
+
+      return response.data;
     },
   });
 };

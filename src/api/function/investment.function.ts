@@ -296,3 +296,60 @@ export const updateInvestmentRequestStatusFns = async ({
     };
   }
 };
+export const fetchInvestorInvestmentRequestsFns = async () => {
+  try {
+    // 1. Authenticate Investor
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return {
+        success: false,
+        data: [],
+        message: "User not authenticated.",
+      };
+    }
+
+    // 2. Fetch Investor Requests
+    const { data, error } = await supabase
+      .from("investment_requests")
+      .select(
+        `
+          *,
+          startup:startups!investment_requests_startup_id_fkey(
+            id,
+            startup_name,
+            logo_url,
+            industry,
+            funding_stage
+          )
+        `
+      )
+      .eq("investor_id", user.id)
+      .order("created_at", {
+        ascending: false,
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      success: true,
+      data,
+      message: "Investment requests fetched successfully.",
+    };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      success: false,
+      data: [],
+      message:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong.",
+    };
+  }
+};

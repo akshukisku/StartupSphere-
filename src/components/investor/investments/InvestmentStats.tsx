@@ -8,31 +8,34 @@ import {
 } from "lucide-react";
 
 import DashboardCard from "@/components/common/DashboardCard";
+import { useInvestorInvestmentStats } from "@/hooks/dashboard/useDashboard";
 
-const stats = [
+
+
+const InvestmentStats = () => {
+  const { data, isPending } = useInvestorInvestmentStats();
+  const stats = [
   {
     title: "Total Investments",
-    value: "0",
+    value: data?.totalInvestments ?? 0,
     icon: BriefcaseBusiness,
   },
   {
     title: "Active",
-    value: "0",
+    value: data?.activeInvestments ?? 0,
     icon: CircleCheckBig,
   },
   {
     title: "Pending",
-    value: "0",
+    value: data?.pendingInvestments ?? 0,
     icon: Clock3,
   },
   {
     title: "Total Invested",
-    value: "₹0",
+    value: `₹${(data?.totalInvested ?? 0).toLocaleString()}`,
     icon: IndianRupee,
   },
 ];
-
-const InvestmentStats = () => {
   return (
     <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
       {stats.map((stat) => {

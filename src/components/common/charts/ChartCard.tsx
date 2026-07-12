@@ -12,27 +12,19 @@ interface ChartCardProps {
   children: React.ReactNode;
 }
 
-const ChartCard = ({
-  title,
-  description,
-  children,
-}: ChartCardProps) => {
+const ChartCard = ({ title, description, children }: ChartCardProps) => {
   return (
     <Card className="h-full overflow-hidden rounded-xl border border-border/50 shadow-sm">
       <CardHeader className="space-y-1 pb-3">
-        <CardTitle className="text-lg font-semibold">
-          {title}
-        </CardTitle>
+        <CardTitle className="text-lg font-semibold">{title}</CardTitle>
 
         {description && (
-          <CardDescription className="text-sm">
-            {description}
-          </CardDescription>
+          <CardDescription className="text-sm">{description}</CardDescription>
         )}
       </CardHeader>
 
-      <CardContent className="h-[360px] pt-0">
-        {children}
+      <CardContent className="pt-0">
+        <div className="h-[320px] w-full min-w-0">{children}</div>
       </CardContent>
     </Card>
   );

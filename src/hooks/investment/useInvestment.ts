@@ -1,4 +1,4 @@
-import { createInvestmentRequestFns, fetchFounderInvestmentRequestsFns, updateInvestmentRequestStatusFns } from "@/api/function/investment.function";
+import { createInvestmentRequestFns, fetchFounderInvestmentRequestsFns, fetchInvestorInvestmentRequestsFns, updateInvestmentRequestStatusFns } from "@/api/function/investment.function";
 import { InvestmentRequestPayload } from "@/types/interface/investment.interface";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -84,6 +84,22 @@ export const useUpdateInvestmentRequestStatus = () => {
           ? error.message
           : "Something went wrong."
       );
+    },
+  });
+};
+export const useInvestorInvestmentRequests = () => {
+  return useQuery({
+    queryKey: ["investor-investment-requests"],
+
+    queryFn: async () => {
+      const response =
+        await fetchInvestorInvestmentRequestsFns();
+
+      if (!response.success) {
+        throw new Error(response.message);
+      }
+
+      return response.data;
     },
   });
 };

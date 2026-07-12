@@ -2,10 +2,15 @@
 
 import EmptyInvestments from "./EmptyInvestments";
 import InvestmentCard from "./InvestmentCard";
+import { InvestorInvestmentRow } from "@/layout/investor/InvestmentColumns";
 
-const investments: any[] = [];
+interface InvestmentGridProps {
+  investments: InvestorInvestmentRow[];
+}
 
-const InvestmentGrid = () => {
+const InvestmentGrid = ({
+  investments,
+}: InvestmentGridProps) => {
   if (!investments.length) {
     return <EmptyInvestments />;
   }

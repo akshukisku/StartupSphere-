@@ -1,5 +1,13 @@
-import { BookmarkCheckIcon, SearchIcon, Settings01Icon } from "@animateicons/react/huge";
-import { HandCoinsIcon, UserCheckIcon, UserIcon } from "@animateicons/react/lucide";
+import {
+  BookmarkCheckIcon,
+  SearchIcon,
+  Settings01Icon,
+} from "@animateicons/react/huge";
+import {
+  HandCoinsIcon,
+  UserCheckIcon,
+  UserIcon,
+} from "@animateicons/react/lucide";
 import {
   LayoutDashboard,
   Rocket,
@@ -12,6 +20,7 @@ import {
   CalendarDays,
   ClipboardCheck,
   GraduationCap,
+  HandCoins,
 } from "lucide-react";
 
 export const founderMenu = [
@@ -26,15 +35,15 @@ export const founderMenu = [
     icon: Rocket,
   },
   {
-  title: "Pitch Deck",
-  url: "/founder/pitch-deck",
-  icon: FileText,
-},
-{
-  title: "Investment Requests",
-  url: "/founder/investment-requests",
-  icon: HandCoinsIcon, // or DollarSign, BriefcaseBusiness
-}
+    title: "Pitch Deck",
+    url: "/founder/pitch-deck",
+    icon: FileText,
+  },
+  {
+    title: "Investment Requests",
+    url: "/founder/investment-requests",
+    icon: HandCoinsIcon, // or DollarSign, BriefcaseBusiness
+  },
 ];
 
 export const mentorMenu = [
@@ -54,7 +63,7 @@ export const mentorMenu = [
     url: "/mentor/sessions",
     icon: CalendarDays,
   },
-    {
+  {
     title: "Profile",
     url: "/mentor/profile",
     icon: UserIcon,
@@ -81,6 +90,11 @@ export const investorMenu = [
     title: "Saved Startups",
     url: "/investor/saved",
     icon: BookmarkCheckIcon,
+  },
+  {
+    title: "My Investments",
+    url: "/investor/investment-requests",
+    icon: HandCoins,
   },
   {
     title: "My Interests",

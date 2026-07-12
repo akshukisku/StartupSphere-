@@ -169,3 +169,48 @@ export const markAllNotificationsAsRead = async (userId: string) => {
     };
   }
 };
+export const fetchFounderNotificationsFns = async () => {
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return {
+        success: false,
+        data: [],
+        message: "User not authenticated.",
+      };
+    }
+
+    const { data, error } = await supabase
+      .from("notifications")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", {
+        ascending: false,
+      })
+      .limit(5);
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      success: true,
+      data,
+      message: "Notifications fetched successfully.",
+    };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      success: false,
+      data: [],
+      message:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong.",
+    };
+  }
+};
