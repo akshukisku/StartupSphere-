@@ -21,6 +21,7 @@ import {
   ClipboardCheck,
   GraduationCap,
   HandCoins,
+  Inbox,
 } from "lucide-react";
 
 export const founderMenu = [
@@ -30,7 +31,7 @@ export const founderMenu = [
     icon: LayoutDashboard,
   },
   {
-    title: "My Startup",
+    title: "My Startups",
     url: "/founder/startups",
     icon: Rocket,
   },
@@ -42,19 +43,27 @@ export const founderMenu = [
   {
     title: "Investment Requests",
     url: "/founder/investment-requests",
-    icon: HandCoinsIcon, // or DollarSign, BriefcaseBusiness
+    icon: HandCoinsIcon,
+  },
+  {
+    title: "Mentors",
+    url: "/founder/mentors",
+    icon: Users,
   },
 ];
-
 export const mentorMenu = [
   {
     title: "Dashboard",
     url: "/mentor/dashboard",
     icon: LayoutDashboard,
   },
-
   {
-    title: "Assigned Startups",
+    title: "Mentor Requests",
+    url: "/mentor/requests",
+    icon: Inbox,
+  },
+  {
+    title: "My Startups",
     url: "/mentor/startups",
     icon: BriefcaseBusiness,
   },

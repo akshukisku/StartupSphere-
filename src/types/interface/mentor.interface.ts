@@ -154,3 +154,28 @@ export interface MentorEvaluationPayload {
 
   recommendations: string;
 }
+export interface CreateMentorRequestPayload {
+  mentorId: string;
+  message: string;
+}
+export interface UpdateMentorRequestPayload {
+  requestId: string;
+  status: "accepted" | "rejected";
+}
+export interface MentorRequestRow {
+  id: string;
+  message: string;
+  status: "pending" | "accepted" | "rejected";
+  created_at: string;
+
+  startup: {
+    startup_name: string;
+    industry: string | null;
+    logo_url: string | null;
+  };
+
+  founder: {
+    full_name: string;
+    email: string;
+  };
+}

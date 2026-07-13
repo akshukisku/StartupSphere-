@@ -4,15 +4,20 @@ import {
   completeMentorSessionFns,
   createMentorEvaluationFns,
   createMentorProfileFns,
+  createMentorRequestFns,
   createMentorSessionFns,
   fetchAssignedStartupsFns,
+  fetchAvailableMentorsFns,
+  fetchFounderStartupsFns,
   fetchMentorDashboardStatsFns,
   fetchMentorEvaluationFns,
   fetchMentorProfileFns,
+  fetchMentorRequestsFns,
   fetchMentorSessionDetailsFns,
   fetchMentorSessionsFns,
   finishMentorshipFns,
   updateMentorProfileFns,
+  updateMentorRequestStatusFns,
   updateMentorSessionFns,
 } from "@/api/function/mentor.function";
 import {
@@ -288,5 +293,124 @@ export const useMentorEvaluation = (
     },
 
     enabled: !!sessionId,
+  });
+};
+export const useAvailableMentors = () => {
+  return useQuery({
+    queryKey: ["available-mentors"],
+
+    queryFn: async () => {
+      const response = await fetchAvailableMentorsFns();
+
+      if (!response.success) {
+        throw new Error(response.message);
+      }
+
+      return response.data;
+    },
+  });
+};
+export const useFounderStartups = () => {
+  return useQuery({
+    queryKey: ["founder-startups"],
+
+    queryFn: async () => {
+      const response =
+        await fetchFounderStartupsFns();
+
+      if (!response.success) {
+        throw new Error(response.message);
+      }
+
+      return response.data;
+    },
+  });
+};
+export const useCreateMentorRequest = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createMentorRequestFns,
+
+    onSuccess: (response) => {
+      if (!response.success) {
+        toast.error(response.message);
+        return;
+      }
+
+      toast.success(response.message);
+
+      queryClient.invalidateQueries({
+        queryKey: ["mentor-requests"],
+      });
+    },
+
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+};
+export const useMentorRequests = () => {
+  return useQuery({
+    queryKey: ["mentor-requests"],
+
+    queryFn: async () => {
+      const response = await fetchMentorRequestsFns();
+
+      if (!response.success) {
+        throw new Error(response.message);
+      }
+
+      return response.data;
+    },
+  });
+};
+export const useUpdateMentorRequestStatus = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateMentorRequestStatusFns,
+
+    onSuccess: (response) => {
+      if (!response.success) {
+        toast.error(response.message);
+        return;
+      }
+
+      toast.success(response.message);
+
+      // Refresh mentor requests
+      queryClient.invalidateQueries({
+        queryKey: ["mentor-requests"],
+      });
+
+      // Refresh mentor assigned startups
+      queryClient.invalidateQueries({
+        queryKey: ["mentor-assigned-startups"],
+      });
+
+      // Refresh founder mentor requests
+      queryClient.invalidateQueries({
+        queryKey: ["founder-mentor-requests"],
+      });
+
+      // Refresh founder dashboard
+      queryClient.invalidateQueries({
+        queryKey: ["founder-dashboard"],
+      });
+
+      // Optional: refresh mentor dashboard if it displays request counts
+      queryClient.invalidateQueries({
+        queryKey: ["mentor-dashboard"],
+      });
+    },
+
+    onError: (error) => {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong."
+      );
+    },
   });
 };
