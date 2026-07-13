@@ -647,7 +647,7 @@ export const createMentorRequestFns = async ({
     };
   }
 };
-export const fetchMentorRequestsFns = async () => {
+export const fetchMentorRequestsFns = async (): Promise<any> => {
   try {
     const {
       data: { user },
@@ -684,31 +684,15 @@ export const fetchMentorRequestsFns = async () => {
       .order("created_at", {
         ascending: false,
       });
+      console.log("RAW DATA:", data);
 
     if (error) {
       throw error;
     }
-    const requests: MentorRequestRow[] = (data ?? []).map((item) => ({
-      id: item.id,
-      message: item.message,
-      status: item.status,
-      created_at: item.created_at,
-
-      startup: item.startup?.[0] ?? {
-        startup_name: "",
-        industry: null,
-        logo_url: null,
-      },
-
-      founder: item.founder?.[0] ?? {
-        full_name: "",
-        email: "",
-      },
-    }));
 
     return {
       success: true,
-      data:requests,
+      data,
       message: "Mentor requests fetched successfully.",
     };
   } catch (error) {
